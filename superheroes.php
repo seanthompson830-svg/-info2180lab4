@@ -1,72 +1,46 @@
 <?php
+header("Content-Type: text/html; charset=UTF-8");
 
 $superheroes = [
-  [
-      "id" => 1,
-      "name" => "Steve Rogers",
-      "alias" => "Captain America",
-      "biography" => "Recipient of the Super-Soldier serum, World War II hero Steve Rogers fights for American ideals as one of the world’s mightiest heroes and the leader of the Avengers.",
-  ],
-  [
-      "id" => 2,
-      "name" => "Tony Stark",
-      "alias" => "Ironman",
-      "biography" => "Genius. Billionaire. Playboy. Philanthropist. Tony Stark's confidence is only matched by his high-flying abilities as the hero called Iron Man.",
-  ],
-  [
-      "id" => 3,
-      "name" => "Peter Parker",
-      "alias" => "Spiderman",
-      "biography" => "Bitten by a radioactive spider, Peter Parker’s arachnid abilities give him amazing powers he uses to help others, while his personal life continues to offer plenty of obstacles.",
-  ],
-  [
-      "id" => 4,
-      "name" => "Carol Danvers",
-      "alias" => "Captain Marvel",
-      "biography" => "Carol Danvers becomes one of the universe's most powerful heroes when Earth is caught in the middle of a galactic war between two alien races.",
-  ],
-  [
-      "id" => 5,
-      "name" => "Natasha Romanov",
-      "alias" => "Black Widow",
-      "biography" => "Despite super spy Natasha Romanoff’s checkered past, she’s become one of S.H.I.E.L.D.’s most deadly assassins and a frequent member of the Avengers.",
-  ],
-  [
-      "id" => 6,
-      "name" => "Bruce Banner",
-      "alias" => "Hulk",
-      "biography" => "Dr. Bruce Banner lives a life caught between the soft-spoken scientist he’s always been and the uncontrollable green monster powered by his rage.",
-  ],
-  [
-      "id" => 7,
-      "name" => "Clint Barton",
-      "alias" => "Hawkeye",
-      "biography" => "A master marksman and longtime friend of Black Widow, Clint Barton serves as the Avengers’ amazing archer.",
-  ],
-  [
-      "id" => 8,
-      "name" => "T'challa",
-      "alias" => "Black Panther",
-      "biography" => "T’Challa is the king of the secretive and highly advanced African nation of Wakanda - as well as the powerful warrior known as the Black Panther.",
-  ],
-  [
-      "id" => 9,
-      "name" => "Thor Odinson",
-      "alias" => "Thor",
-      "biography" => "The son of Odin uses his mighty abilities as the God of Thunder to protect his home Asgard and planet Earth alike.",
-  ],
-  [
-      "id" => 10,
-      "name" => "Wanda Maximoff",
-      "alias" => "Scarlett Witch",
-      "biography" => "Notably powerful, Wanda Maximoff has fought both against and with the Avengers, attempting to hone her abilities and do what she believes is right to help the world.",
-  ], 
+  ["name" => "Steve Rogers", "alias" => "Captain America", "biography" => "A World War II veteran and leader of the Avengers."],
+  ["name" => "Tony Stark", "alias" => "Ironman", "biography" => "A genius billionaire and philanthropist who built the Iron Man suit."],
+  ["name" => "Peter Parker", "alias" => "Spiderman", "biography" => "Bitten by a radioactive spider, he uses his powers to protect New York City."],
+  ["name" => "Carol Danvers", "alias" => "Captain Marvel", "biography" => "A former U.S. Air Force pilot with cosmic powers."],
+  ["name" => "Natasha Romanoff", "alias" => "Black Widow", "biography" => "A master spy and assassin, member of the Avengers."],
+  ["name" => "Bruce Banner", "alias" => "Hulk", "biography" => "A scientist who transforms into the Hulk when angry."],
+  ["name" => "Clint Barton", "alias" => "Hawkeye", "biography" => "A skilled marksman and former S.H.I.E.L.D. agent."],
+  ["name" => "T'Challa", "alias" => "Black Panther", "biography" => "The king of Wakanda and protector of his people."],
+  ["name" => "Thor Odinson", "alias" => "Thor", "biography" => "The Norse God of Thunder, wielder of Mjolnir."],
+  ["name" => "Wanda Maximoff", "alias" => "Scarlett Witch", "biography" => "A powerful sorceress who can manipulate reality."]
 ];
 
-?>
+function e($s) { return htmlspecialchars($s ?? "", ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 
-<ul>
-<?php foreach ($superheroes as $superhero): ?>
-  <li><?= $superhero['alias']; ?></li>
-<?php endforeach; ?>
-</ul>
+$query = isset($_GET['query']) ? trim($_GET['query']) : "";
+
+if ($query === "") {
+  echo "<ul>";
+  foreach ($superheroes as $hero) {
+    echo "<li>" . e($hero['alias']) . "</li>";
+  }
+  echo "</ul>";
+  exit;
+}
+
+$match = null;
+$q = strtolower($query);
+
+foreach ($superheroes as $hero) {
+  if (strtolower($hero['alias']) === $q || strtolower($hero['name']) === $q) {
+    $match = $hero;
+    break;
+  }
+}
+
+if ($match) {
+  echo "<h3>" . e($match['alias']) . "</h3>";
+  echo "<h4>" . e($match['name']) . "</h4>";
+  echo "<p>"  . e($match['biography']) . "</p>";
+} else {
+  echo "<p>Superhero not found</p>";
+}
